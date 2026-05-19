@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="hy">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ֆայլերի վերբեռնում</title>
+    <style>
+        :root {
+            --primary-color: #004a52;
+            /* Matching Ameria logo dark teal */
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .upload-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 450px;
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto 1.5rem;
+            max-width: 200px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--text-color);
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .upload-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 20px 10px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fafafa;
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--primary-color);
+            background-color: #f0f7ff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #357abd;
+        }
+
+        .file-info {
+            margin-top: 5px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        #resultSection {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            color: #48bb78;
+            margin-bottom: 1rem;
+        }
+
+        .download-btn {
+            display: block;
+            margin: 10px 0;
+            padding: 12px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            background-color: #edf2f7;
+            color: #2d3748;
+            transition: background 0.2s;
+        }
+
+        .download-btn:hover {
+            background-color: #e2e8f0;
+        }
+
+        .download-btn.primary {
+            background-color: #48bb78;
+            color: white;
+        }
+
+        .download-btn.primary:hover {
+            background-color: #38a169;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .vo-count-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .session-info {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="upload-card">
+        <img src="logo.png" alt="Ameria Bank Logo" class="logo">
+        <h2>Փաստաթղթերի և սլայդների վերբեռնում</h2>
+
+        <p class="description">
+            Այս համակարգը նախատեսված է կրթական նպատակների համար։ Այն վերլուծում է Ձեր նյութերը և ավտոմատ կերպով ստեղծում
+            ուսուցողական տեսանյութ ու համապատասխան թեստ։
+        </p>
+
+        <form id="uploadForm">
+            <!-- Document Upload Section -->
+            <div class="upload-group">
+                <label for="docFile">Word Փաստաթուղթ (.doc, .docx)</label>
+                <input type="file" id="docFile" name="docFile"
+                    accept=".doc, .docx, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    required>
+                <div class="file-info">Ֆորմատներ՝ .doc, .docx</div>
+            </div>
+
+            <!-- PowerPoint Upload Section -->
+            <div class="upload-group">
+                <label for="pptFile">PowerPoint Ներկայացում (.ppt, .pptx)</label>
+                <input type="file" id="pptFile" name="pptFile"
+                    accept=".ppt, .pptx, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                    required>
+                <div class="file-info">Ֆորմատներ՝ .ppt, .pptx</div>
+            </div>
+
+            <button type="submit" class="btn-submit">Վերբեռնել ֆայլերը</button>
+
+            <!-- Progress Container -->
+            <div id="progressContainer" style="display: none; margin-top: 20px;">
+                <div
+                    style="width: 100%; background-color: #e2e8f0; border-radius: 8px; overflow: hidden; height: 16px;">
+                    <div id="progressBar"
+                        style="width: 0%; height: 100%; background-color: var(--primary-color); transition: width 0.4s ease;">
+                    </div>
+                </div>
+                <div id="progressText"
+                    style="text-align: center; margin-top: 8px; font-size: 0.9rem; color: #4a5568; font-weight: 500;">0%
+                    - Սպասում...</div>
+
+                <!-- Stop Button -->
+                <button type="button" id="stopBtn" onclick="stopProcess()"
+                    style="width: 100%; margin-top: 15px; padding: 10px; background-color: #feb2b2; color: #9b2c2c; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                    Կանգնեցնել և վերբեռնել նորից
+                </button>
+            </div>
+        </form>
+
+        <!-- Result Section -->
+        <div id="resultSection">
+            <div class="success-icon">✓</div>
+            <h3>Մշակումն ավարտված է:</h3>
+            <p>Ձեր ֆայլերը հաջողությամբ ստեղծվել են։</p>
+            <div id="voCounter" class="vo-count-badge"></div>
+            <div id="sessionIdDisplay" class="session-info"></div>
+
+            <a href="#" class="download-btn primary" id="downloadVideo">Ներբեռնել տեսանյութը (.mp4)</a>
+            <a href="#" class="download-btn" id="downloadTestDoc">Ներբեռնել թեստային առաջադրանքները (.docx)</a>
+
+            <button onclick="location.reload()"
+                style="margin-top: 20px; background: none; border: none; color: var(--primary-color); cursor: pointer; text-decoration: underline;">Վերբեռնել
+                նոր ֆայլեր</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+
+        function stopProcess() {
+            if (!currentSessionId) return;
+
+            if (!confirm("Իսկապե՞ս ցանկանում եք դադարեցնել պրոցեսը:")) return;
+
+            fetch(`/stop/${currentSessionId}`, { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("Stop requested:", data);
+                    resetUI();
+                })
+                .catch(e => {
+                    console.error("Stop error:", e);
+                    resetUI();
+                });
+        }
+
+        function resetUI() {
+            const btn = document.querySelector('.btn-submit');
+            btn.textContent = 'Վերբեռնել ֆայլերը';
+            btn.style.opacity = '1';
+            btn.disabled = false;
+
+            if (window.progressInterval) clearInterval(window.progressInterval);
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('uploadForm').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+
+            // Reset files
+            document.getElementById('docFile').value = '';
+            document.getElementById('pptFile').value = '';
+
+            currentSessionId = null;
+        }
+
+        document.getElementById('uploadForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const docFile = document.getElementById('docFile').files[0];
+            const pptFile = document.getElementById('pptFile').files[0];
+
+            if (docFile && pptFile) {
+                const btn = e.target.querySelector('.btn-submit');
+                const originalText = btn.textContent;
+
+                // Ֆունկցիա կոճակը վերականգնելու համար
+                const resetButton = () => {
+                    btn.textContent = originalText;
+                    btn.style.opacity = '1';
+                    btn.disabled = false;
+                    if (window.progressInterval) clearInterval(window.progressInterval);
+                    document.getElementById('progressContainer').style.display = 'none';
+                };
+
+                btn.textContent = 'Վերբեռնվում է...';
+                btn.style.opacity = '0.7';
+                btn.disabled = true;
+
+                // Պատրաստում ենք տվյալները սերվերին ուղարկելու համար
+                const formData = new FormData();
+                formData.append('docFile', docFile);
+                formData.append('pptFile', pptFile);
+
+                // Ստեղծում ենք session id, որպեսզի հետևենք պրոցեսին
+                const sessionId = (crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).substring(2) + Date.now().toString(36);
+                currentSessionId = sessionId;
+                formData.append('session_id', sessionId);
+
+                // Ցույց ենք տալիս պրոգրես բարը
+                const progressContainer = document.getElementById('progressContainer');
+                const progressBar = document.getElementById('progressBar');
+                const progressText = document.getElementById('progressText');
+                progressContainer.style.display = 'block';
+
+                window.progressInterval = setInterval(() => {
+                    fetch(`/progress/${sessionId}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            progressBar.style.width = `${data.percent}%`;
+                            progressText.textContent = `${data.percent}% - ${data.message}`;
+
+                            // Ավարտվել է հաջողությամբ
+                            if (data.status === "done" && data.result && data.result.success) {
+                                clearInterval(window.progressInterval);
+                                progressContainer.style.display = 'none';
+
+                                const resultData = data.result;
+                                document.getElementById('uploadForm').style.display = 'none';
+                                document.getElementById('resultSection').style.display = 'block';
+                                document.getElementById('voCounter').textContent = `Հայտնաբերվել է ${resultData.vo_count} ձայնային հատված (VO)`;
+                                document.getElementById('sessionIdDisplay').textContent = `Հարցման ID: ${resultData.session_id}`;
+
+                                document.getElementById('downloadVideo').href = `/download/${resultData.session_id}/${resultData.video_url}`;
+                                document.getElementById('downloadVideo').setAttribute('download', resultData.video_url);
+
+                                document.getElementById('downloadTestDoc').href = `/download/${resultData.session_id}/evaluation_test.docx`;
+                                document.getElementById('downloadTestDoc').setAttribute('download', 'evaluation_test.docx');
+
+                                console.log("Timeline details for video generation:", resultData.audio_timeline);
+                            }
+                            // Առաջացել է սխալ
+                            else if (data.status === "error") {
+                                clearInterval(window.progressInterval);
+                                alert("Սխալ: " + (data.result ? data.result.error : data.message));
+                                resetButton();
+                            }
+                        })
+                        .catch(e => console.log('Progress fetch issue:', e));
+                }, 1000);
+
+                // Հարցում ենք կատարում Python սերվերին (այժմ միայն սկսում է պրոցեսը ֆոնային ռեժիմով)
+                fetch('/process', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            clearInterval(window.progressInterval);
+                            progressContainer.style.display = 'none';
+                            alert("Սխալ: " + data.error);
+                            resetButton();
+                        } else {
+                            // Backend accepted the task. Let the interval handle completion!
+                            console.log("Background processing started for session:", data.session_id);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        clearInterval(window.progressInterval);
+                        alert("Չհաջողվեց կապ հաստատել Python սերվերի հետ։ Համոզվեք, որ app.py-ը միացված է։");
+                        resetButton();
+                    });
+
+                // Here you would typically use Fetch API or XMLHttpRequest to send files to a server
+                console.log("Document:", docFile);
+                console.log("Presentation:", pptFile);
+            } else {
+                alert("Խնդրում ենք ընտրել երկու ֆայլերն էլ վերբեռնելուց առաջ։");
+            }
+        });
+    </script>
+
+</body>
+
+</html>
