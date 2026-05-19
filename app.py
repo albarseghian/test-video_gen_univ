@@ -42,8 +42,8 @@ CORS(app)  # Թույլատրում ենք հարցումները ֆրոնտեն
 STOP_SIGNALS = set()
 
 # Կարգավորում ենք Gemini API-ն՝ օգտագործելով միջավայրի փոփոխականները
-# GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-GEMINI_API_KEY = "AIzaSyCcyvoPzNYuS2YamgpEtYsOf9YY8GMo3Hc"
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+# GEMINI_API_KEY = "API_KEY_for_test"
 if not GEMINI_API_KEY:
     raise RuntimeError("Կրիտիկական սխալ: GEMINI_API_KEY միջավայրի փոփոխականը սահմանված չէ:")
 
